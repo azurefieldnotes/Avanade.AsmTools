@@ -1,49 +1,6 @@
 #Requires -Version 3
 
-Function InvokeAsmGet
-{
-    [CmdletBinding(ConfirmImpact='None')]
-    param
-    (
-        # Uri
-        [Parameter(Mandatory=$true)]
-        [System.Uri]
-        $Uri,
-        [Parameter(Mandatory=$true)]
-        [String]
-        $AuthToken,        
-        [Parameter(Mandatory=$true)]
-        [String]
-        $ApiVersion
-    )
-
-    $Headers=@{
-        'x-ms-version'=$ApiVersion;
-        'Authorization'="Bearer $AuthToken"
-    }
-    $Result=Invoke-RestMethod -Uri $Uri -Method Get -UseBasicParsing -Headers $Headers
-    Write-Output $Result
-}
-
-Function InvokeAsmDelete
-{
-    [CmdletBinding(ConfirmImpact='None')]
-    param
-    (
-        # Uri
-        [Parameter(Mandatory=$true)]
-        [System.Uri]
-        $Uri,
-        [Parameter(Mandatory=$true)]
-        [String]
-        $AuthToken,        
-        [Parameter(Mandatory=$true)]
-        [String]
-        $ApiVersion
-    )
-}
-
-Function InvokeAsmPut
+Function InvokeAsmRequest
 {
     [CmdletBinding(ConfirmImpact='None')]
     param
@@ -55,13 +12,36 @@ Function InvokeAsmPut
         [Parameter(Mandatory=$true)]
         [String]
         $AuthToken,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$false)]
         [String]
         $RequestBody,              
         [Parameter(Mandatory=$true)]
         [String]
-        $ApiVersion
+        $ApiVersion,
+        [Parameter(Mandatory=$false)]
+        [String]
+        $Method='GET',
+        [Parameter(Mandatory=$false)]
+        [String]
+        $ContentType='application/json'        
     )
+    $Headers=@{
+        'x-ms-version'=$ApiVersion;
+        'Authorization'="Bearer $AuthToken"
+    }
+    Write-Verbose "[InvokeAsmRequest] URI:$Uri METHOD:$Method ContentType:$ContentType APIVersion:$ApiVersion"
+    try {
+        if ([String]::IsNullOrEmpty($RequestBody)) {
+            $Result=Invoke-RestMethod -Uri $Uri -Method $Method -Headers $Headers -ContentType $ContentType -ErrorAction Stop
+        }
+        else {
+            $Result=Invoke-RestMethod -Uri $Uri -Method $Method -Headers $Headers -ContentType $ContentType -Body $RequestBody -ErrorAction Stop
+        }
+        Write-Output $Result        
+    }
+    catch {
+        Write-Warning "[InvokeAsmRequest] Error:$($_)"
+    }
 }
 
 <#
@@ -92,11 +72,11 @@ Function Get-ASMSubscription
     $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
     if ([String]::IsNullOrEmpty($SubscriptionId)) {
         $UrlBld.Path="subscriptions"
-        $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+        $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     }
     else {
         $UrlBld.Path="$SubscriptionId"
-        $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+        $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     }
     Write-Output $Result
 }
@@ -139,9 +119,45 @@ Function Get-ASMCloudService
     else {
         $UrlBld.Path="$SubscriptionId/services/hostedservices/$Name"
     }
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
 
+}
+
+<#
+    .SYNOPSIS
+        Removes the cloud service within the subscription
+    .PARAMETER SubscriptionId
+        The subscription id
+    .PARAMETER AuthToken
+        The authorization token
+    .PARAMETER Name
+        The cloud service name
+    .PARAMETER ApiVersion
+        The api version to use
+#>
+Function Remove-ASMCloudService
+{
+    [CmdletBinding(ConfirmImpact='None')]
+    param
+    (
+        [Parameter(Mandatory=$true)]
+        [string]
+        $SubscriptionId,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $AuthToken,        
+        [Parameter(Mandatory=$true)]
+        [string]
+        $Name,
+        [Parameter(Mandatory=$false)]
+        [String]
+        $ApiVersion= '2013-08-01'  
+    )
+
+    $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
+    $UrlBld.Path="$SubscriptionId/services/hostedservices/$Name"
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'DELETE'
 }
 
 <#
@@ -182,7 +198,7 @@ Function Get-ASMVirtualNetwork
     else {
         $UrlBld.Path="$SubscriptionId/services/networking/virtualnetwork/$Name"
     }
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
 }
 
@@ -229,7 +245,7 @@ Function Get-ASMSqlServer
     if ($MakeGeneric.IsPresent) {
         $UriBld.Query="contentview=generic"
     }
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result    
 }
 
@@ -301,7 +317,7 @@ Function Get-ASMSqlDatabase
     if ($MakeGeneric.IsPresent) {
         $UriBld.Query="contentview=generic"
     }
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result    
 }
 
@@ -366,7 +382,7 @@ Function Get-ASMSqlServerFirewallRule
     if ([String]::IsNullOrEmpty($Name)) {
         $UrlBld.Path="$($UrlBld.Path)/$Name"
     }
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result    
 }
 
@@ -396,8 +412,8 @@ Function Get-ASMOsImages
         $ApiVersion= '2013-03-01'
     )
     $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
-    $UrlBld.Path="subscriptions/$SubscriptionId/services/images"
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $UrlBld.Path="$SubscriptionId/services/images"
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
 }
 
@@ -436,7 +452,7 @@ Function Get-ASMVmImages
         $Category                      
     )
     $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
-    $UrlBld.Path="subscriptions/$SubscriptionId/services/vmimages"
+    $UrlBld.Path="$SubscriptionId/services/vmimages"
     $QueryParams=@()
     if ([string]::IsNullOrEmpty($Location) -ne $false) {
         $QueryParams+="location=$Location"
@@ -448,7 +464,7 @@ Function Get-ASMVmImages
         $QueryParams+="category=$Category"
     }
     $UrlBld.Query=[String]::Join('&',$QueryParams)
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
 }
 
@@ -506,8 +522,65 @@ Function Get-ASMCloudServiceDeployment
     {
         $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$Name" 
     }
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
+}
+
+<#
+    .SYNOPSIS
+        Removes the deployment associated with a cloud service
+    .PARAMETER SubscriptionId
+        The subscription id
+    .PARAMETER CloudServiceName
+        The cloud service name
+    .PARAMETER Name
+        The deployment name
+    .PARAMETER Staging
+        Whether to query the staging slot
+    .PARAMETER AuthToken
+        The authorization token
+    .PARAMETER ApiVersion
+        The api version used
+#>
+Function Remove-ASMCloudServiceDeployment
+{
+    [CmdletBinding(ConfirmImpact='None')]
+    param
+    (
+        [Parameter(Mandatory=$true)]
+        [string]
+        $SubscriptionId,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $AuthToken,        
+        [Parameter(Mandatory=$true)]
+        [string]
+        $CloudServiceName,
+        [Parameter(Mandatory=$false)]
+        [string]
+        $Name,
+        [Parameter(Mandatory=$false)]
+        [String]
+        $ApiVersion= '2012-03-01',
+        [Parameter(Mandatory=$false)]
+        [Switch]
+        $Staging
+    )
+    $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
+    if([String]::IsNullOrEmpty($Name))
+    {
+        $DeploymentSlot='Production'
+        if($Staging.IsPresent)
+        {
+            $DeploymentSlot='Staging'
+        }
+        $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deploymentslots/$DeploymentSlot"    
+    }
+    else
+    {
+        $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$Name" 
+    }
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'DELETE'
 }
 
 <#
@@ -552,7 +625,59 @@ Function Get-ASMCloudServiceRole
     )
     $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
     $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$DeploymentName/roles/$Name"
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    Write-Output $Result
+}
+
+<#
+    .SYNOPSIS
+        Removes the roles associated with a cloud service
+    .PARAMETER SubscriptionId
+        The subscription id
+    .PARAMETER CloudServiceName
+        The cloud service name
+    .PARAMETER DeploymentName
+        The deployment name
+    .PARAMETER DeploymentName
+        The role name
+    .PARAMETER AuthToken
+        The authorization token
+    .PARAMETER ApiVersion
+        The api version used
+#>
+Function Remove-ASMCloudServiceRole
+{
+    [CmdletBinding(ConfirmImpact='None')]
+    param
+    (
+        [Parameter(Mandatory=$true)]
+        [string]
+        $SubscriptionId,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $AuthToken,        
+        [Parameter(Mandatory=$true)]
+        [string]
+        $CloudServiceName,
+        [Parameter(Mandatory=$true)]
+        [string]
+        $DeploymentName,
+        [Parameter(Mandatory=$true)]
+        [string[]]
+        $Name,
+        [Parameter(Mandatory=$false)]
+        [String]
+        $ApiVersion= '2013-08-01'
+    )
+    $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
+    $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$DeploymentName/roleinstances"
+    $UrlBld.Query='comp=delete'
+    $RoleNodes=@()
+    foreach ($RoleName in $Name) {
+        $RoleNodes+="<Name>$RoleName</Name>"   
+    }    
+    [Xml]$RequestBody="<RoleInstances xmlns='http://schemas.microsoft.com/windowsazure' xmlns:i='http://www.w3.org/2001/XMLSchema-instance'>$([String]::Join("`n",$RoleNodes))</RoleInstances>"
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'POST' -ContentType 'application/xml' -RequestBody $RequestBody
     Write-Output $Result
 }
 
@@ -609,7 +734,7 @@ Function Get-ASMCloudServiceDeploymentEvent
         $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$Name/events" 
     }
     $UrlBld.Query="StartTime=$($StartTime.ToString('o'))&EndTime=$($EndTime.ToString('o'))"
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
 }
 
@@ -635,13 +760,13 @@ Function Get-ASMCloudServiceRoleIpForwarding
         $Name,
         [Parameter(Mandatory=$false)]
         [String]
-        $ApiVersion= '2012-03-01',
+        $ApiVersion= '2015-04-01',
         [Parameter(Mandatory=$false)]
         [Switch]
         $Staging
     )
     $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
     $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$DeploymentName/roles/$Name/ipforwarding"
-    $Result=InvokeAsmGet -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
+    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion
     Write-Output $Result
 }
