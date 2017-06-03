@@ -62,6 +62,7 @@ Function Get-ASMSubscription
         [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,
@@ -101,6 +102,7 @@ Function Get-ASMCloudService
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -144,6 +146,7 @@ Function Remove-ASMCloudService
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -180,6 +183,7 @@ Function Get-ASMVirtualNetwork
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -222,6 +226,7 @@ Function Get-ASMSqlServer
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -269,6 +274,7 @@ Function Get-ASMSqlDatabase
         [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
         [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [String]
@@ -341,6 +347,7 @@ Function Get-ASMSqlServerFirewallRule
         [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
         [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [String]
@@ -404,6 +411,7 @@ Function Get-ASMOsImages
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,
@@ -435,6 +443,7 @@ Function Get-ASMVmImages
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,
@@ -492,6 +501,7 @@ Function Get-ASMCloudServiceDeployment
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -550,6 +560,7 @@ Function Remove-ASMCloudServiceDeployment
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -607,6 +618,7 @@ Function Get-ASMCloudServiceRole
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -653,6 +665,7 @@ Function Remove-ASMCloudServiceRole
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -689,6 +702,7 @@ Function Get-ASMCloudServiceDeploymentEvent
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
@@ -746,6 +760,7 @@ Function Get-ASMCloudServiceRoleIpForwarding
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
+        [Alias('AccessToken')]
         [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
