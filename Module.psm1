@@ -59,13 +59,13 @@ Function Get-ASMSubscription
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2013-08-01'  
     ) 
@@ -98,16 +98,16 @@ Function Get-ASMCloudService
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2013-08-01'  
     )
@@ -141,23 +141,23 @@ Function Remove-ASMCloudService
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2013-08-01'  
     )
 
     $UrlBld=New-Object System.UriBuilder("https://management.core.windows.net")
     $UrlBld.Path="$SubscriptionId/services/hostedservices/$Name"
-    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'DELETE'
+    InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'DELETE'|Out-Null
 }
 
 <#
@@ -177,16 +177,16 @@ Function Get-ASMVirtualNetwork
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01'
     )
@@ -219,19 +219,19 @@ Function Get-ASMSqlServer
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01',
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [Switch]
         $MakeGeneric
     )
@@ -266,28 +266,28 @@ Function Get-ASMSqlDatabase
     [CmdletBinding(ConfirmImpact='None',DefaultParameterSetName='explicit')]
     param
     (
-        [Parameter(Mandatory=$true,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true,ParameterSetName='server')]
-        [Parameter(Mandatory=$true,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$true,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $ServerName,
-        [Parameter(Mandatory=$true,ParameterSetName='server')]
+        [Parameter(Mandatory=$true,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
         [psobject]
         $Server,        
-        [Parameter(Mandatory=$false,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$false,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false,ParameterSetName='server')]
-        [Parameter(Mandatory=$false,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$false,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$false,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01',
-        [Parameter(Mandatory=$false,ParameterSetName='server')]
-        [Parameter(Mandatory=$false,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$false,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$false,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [Switch]
         $MakeGeneric
     )
@@ -338,24 +338,24 @@ Function Get-ASMSqlServerFirewallRule
     [CmdletBinding(ConfirmImpact='None',DefaultParameterSetName='explicit')]
     param
     (
-        [Parameter(Mandatory=$true,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true,ParameterSetName='server')]
-        [Parameter(Mandatory=$true,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$true,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$true,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $ServerName,
-        [Parameter(Mandatory=$true,ParameterSetName='server')]
+        [Parameter(Mandatory=$true,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
         [psobject]
         $Server,        
-        [Parameter(Mandatory=$false,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$false,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false,ParameterSetName='server')]
-        [Parameter(Mandatory=$false,ParameterSetName='explicit')]
+        [Parameter(Mandatory=$false,ParameterSetName='server',ValueFromPipelineByPropertyName=$true)]
+        [Parameter(Mandatory=$false,ParameterSetName='explicit',ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01'
     )
@@ -401,13 +401,13 @@ Function Get-ASMOsImages
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2013-03-01'
     )
@@ -432,22 +432,22 @@ Function Get-ASMVmImages
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2014-05-01',
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $Location,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $Publisher,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $Category                      
     )
@@ -489,22 +489,22 @@ Function Get-ASMCloudServiceDeployment
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $CloudServiceName,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01',
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [Switch]
         $Staging
     )
@@ -547,22 +547,22 @@ Function Remove-ASMCloudServiceDeployment
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $CloudServiceName,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01',
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [Switch]
         $Staging
     )
@@ -580,7 +580,7 @@ Function Remove-ASMCloudServiceDeployment
     {
         $UrlBld.Path="$SubscriptionId/services/hostedservices/$CloudServiceName/deployments/$Name" 
     }
-    $Result=InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'DELETE'
+    InvokeAsmRequest -Uri $UrlBld.Uri -AuthToken $AuthToken -ApiVersion $ApiVersion -Method 'DELETE'|Out-Null
 }
 
 <#
@@ -604,22 +604,22 @@ Function Get-ASMCloudServiceRole
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $CloudServiceName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $DeploymentName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2012-03-01'
     )
@@ -650,22 +650,22 @@ Function Remove-ASMCloudServiceRole
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $CloudServiceName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $DeploymentName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string[]]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2013-08-01'
     )
@@ -686,28 +686,28 @@ Function Get-ASMCloudServiceDeploymentEvent
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $CloudServiceName,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2014-06-01',
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [System.DateTime]
         $StartTime,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [System.DateTime]
         $EndTime,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [Switch]
         $Staging
     )
@@ -743,25 +743,25 @@ Function Get-ASMCloudServiceRoleIpForwarding
     [CmdletBinding(ConfirmImpact='None')]
     param
     (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $SubscriptionId,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [String]
         $AuthToken,        
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $CloudServiceName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $DeploymentName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ValueFromPipelineByPropertyName=$true)]
         [string]
         $Name,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [String]
         $ApiVersion= '2015-04-01',
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false,ValueFromPipelineByPropertyName=$true)]
         [Switch]
         $Staging
     )
